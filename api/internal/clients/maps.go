@@ -148,36 +148,6 @@ func getPOIs(lat, lon float64) ([]models.POI, error) {
 	return pois, nil
 }
 
-// ─── Provincia ─────────────────────────────────────
-// func getProvincia(lat, lon float64) string {
-// 	url := fmt.Sprintf(
-// 		"https://api.tomtom.com/search/2/reverseGeocode/%f,%f.json?key=%s",
-// 		lat, lon, apiKey,
-// 	)
-
-// 	resp, err := http.Get(url)
-// 	if err != nil {
-// 		return "desconocida"
-// 	}
-// 	defer resp.Body.Close()
-
-// 	var data struct {
-// 		Addresses []struct {
-// 			Address struct {
-// 				CountrySubdivision string `json:"countrySubdivision"`
-// 			} `json:"address"`
-// 		} `json:"addresses"`
-// 	}
-
-// 	json.NewDecoder(resp.Body).Decode(&data)
-
-// 	if len(data.Addresses) > 0 {
-// 		return data.Addresses[0].Address.CountrySubdivision
-// 	}
-
-// 	return "desconocida"
-// }
-
 func getProvincia(lat, lon float64) (string, string) {
 	url := fmt.Sprintf(
 		"https://api.tomtom.com/search/2/reverseGeocode/%f,%f.json?key=%s",
@@ -229,28 +199,35 @@ func printPOIs(pois []models.POI) {
 	}
 }
 
-// ─── MAIN ──────────────────────────────────────────
-func main() {
-	// lat, lon := randomCoord()
+
+
+
+func generarCase() models.Case {
 	lat, lon, provincia := randomCoordArgentina()
 
-	
-	// lat, lon = snapToRoad(lat, lon)
-
-	pois, _ := getPOIs(lat, lon)
-	// provincia := getProvincia(lat, lon)
-
-	
-	// Clasificación simple
-	
+	pois, _ := getPOIs(lat, lon) 
 	zona := getZona(pois)
 
+	return models.Case{
+		Latitud:         lat,
+		Longitud:        lon,
+		Zona:            zona,
+		Provincia:       provincia,
+		PuntosDeInteres: pois, 
+	}
+}
 
-	fmt.Println("Coordenadas:", lat, lon)
-	fmt.Println("Provincia:", provincia)
-	fmt.Println("Zona:", zona)
 
-	printPOIs(pois)
+// ─── MAIN ──────────────────────────────────────────
+func main() {
+	
+	caseData := generarCase()
+
+	fmt.Println("Coordenadas:", caseData.Latitud, caseData.Longitud)
+	fmt.Println("Provincia:", caseData.Provincia)
+	fmt.Println("Zona:", caseData.Zona)
+
+	printPOIs(caseData.PuntosDeInteres)
 
     
 

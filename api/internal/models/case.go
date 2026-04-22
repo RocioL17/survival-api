@@ -7,8 +7,8 @@ type Case struct {
 	Name            string   `json:"name"`
 	Age             int      `json:"age"`
 	Gender          string   `json:"gender"`
-	Latitud         int      `json:"latitud"`
-	Longitud        int      `json:"longitud"`
+	Latitud         float64  `json:"latitud"`
+	Longitud        float64  `json:"longitud"`
 	Zona            string   `json:"zone"`
 	PuntosDeInteres []POI `json:"interested_points"`
 	Provincia       string   `json:"province"`
