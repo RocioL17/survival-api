@@ -20,10 +20,9 @@ func main() {
  s.Use(server.RecoveryMiddleware)
 
  // Register routes
- s.Router.GET("/", handlers.HomeHandler)
- s.Router.GET("/time", handlers.TimeHandler)
- s.Router.GET("/users", handlers.UsersHandler)
- s.Router.POST("/users", handlers.CreateUserHandler)
+//  s.Router.GET("/", handlers.HomeHandler)
+ s.Router.GET("/case", handlers.MakeCase) // mandar el caso y las opciones
+ s.Router.POST("/options", handlers.VerifyChoice) //evaluar la respuesta
  s.Router.NotFound(handlers.NotFoundHandler)
 
  // Set up graceful shutdown
