@@ -13,7 +13,11 @@ import (
 // }
 
 type CaseHandler struct {
-    service *services.CaseService // El receptor tiene guardado su motor (el servicio)
+	service *services.CaseService
+}
+
+func NewCaseHandler(service *services.CaseService) *CaseHandler {
+	return &CaseHandler{service: service}
 }
 
 func (h *CaseHandler) MakeCase(w http.ResponseWriter, r *http.Request) {

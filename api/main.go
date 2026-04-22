@@ -10,19 +10,24 @@ import (
  "time"
 
  "survival-api/internal/handlers"
+ "survival-api/internal/repository"
+ "survival-api/internal/services"
  "survival-api/server"
 )
 
 func main() {
+ repo := repository.NewJSONRepository("data/cases.json")
+ caseService := services.NewCaseService(repo)
+ caseHandler := handlers.NewCaseHandler(caseService)
+
  s := server.NewServer(8080)
 
  s.Use(server.LoggingMiddleware)
  s.Use(server.RecoveryMiddleware)
 
  // Register routes
-//  s.Router.GET("/", handlers.HomeHandler)
- s.Router.GET("/case", handlers.MakeCase) // mandar el caso y las opciones
- s.Router.POST("/options", handlers.VerifyChoice) //evaluar la respuesta
+ s.Router.GET("/case", caseHandler.MakeCase)
+ s.Router.POST("/options", handlers.VerifyChoice)
  s.Router.NotFound(handlers.NotFoundHandler)
 
  // Set up graceful shutdown

@@ -1,4 +1,4 @@
-package main
+package clients
 
 import (
 	"encoding/json"
@@ -13,12 +13,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func getVariable() string {
+	err := godotenv.Load("../../.env")
 
-
-func getVariable() string{
-	err:= godotenv.Load("../../.env")
-
-	if err!=nil {
+	if err != nil {
 		log.Fatal("Error intentando cargar el .env")
 		log.Fatal(err)
 
@@ -32,37 +30,34 @@ func getVariable() string{
 
 }
 
-
-
 var apiKey = getVariable()
-
 
 // ─── Coordenada random ─────────────────────────────
 func randomCoord() (float64, float64) {
-    r := rand.New(rand.NewSource(time.Now().UnixNano()))
-    for {
-        lat := -55.05 + r.Float64()*33.27
-        lon := -73.57 + r.Float64()*19.93
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for {
+		lat := -55.05 + r.Float64()*33.27
+		lon := -73.57 + r.Float64()*19.93
 
-        // --- FILTROS MANUALES RÁPIDOS ---
-        
-        // 1. Evitar el rincón del Atlántico (si es muy al sur y muy al este, es mar)
-        if lat < -42.0 && lon > -63.0 {
-            continue 
-        }
+		// --- FILTROS MANUALES RÁPIDOS ---
 
-        // 2. Evitar Chile profundo (si es muy al oeste en latitudes centrales)
-        if lat < -30.0 && lat > -45.0 && lon < -71.5 {
-            continue
-        }
+		// 1. Evitar el rincón del Atlántico (si es muy al sur y muy al este, es mar)
+		if lat < -42.0 && lon > -63.0 {
+			continue
+		}
 
-        // 3. Evitar Uruguay/Brasil (si es latitud de Buenos Aires/Litoral pero muy al este)
-        if lat > -35.0 && lat < -30.0 && lon > -58.0 {
-            continue
-        }
+		// 2. Evitar Chile profundo (si es muy al oeste en latitudes centrales)
+		if lat < -30.0 && lat > -45.0 && lon < -71.5 {
+			continue
+		}
 
-        return lat, lon
-    }
+		// 3. Evitar Uruguay/Brasil (si es latitud de Buenos Aires/Litoral pero muy al este)
+		if lat > -35.0 && lat < -30.0 && lon > -58.0 {
+			continue
+		}
+
+		return lat, lon
+	}
 }
 func randomCoordArgentina() (float64, float64, string) {
 	for {
@@ -199,13 +194,10 @@ func printPOIs(pois []models.POI) {
 	}
 }
 
-
-
-
-func generarCase() models.Case {
+func GenerarCase() models.Case {
 	lat, lon, provincia := randomCoordArgentina()
 
-	pois, _ := getPOIs(lat, lon) 
+	pois, _ := getPOIs(lat, lon)
 	zona := getZona(pois)
 
 	return models.Case{
@@ -213,22 +205,7 @@ func generarCase() models.Case {
 		Longitud:        lon,
 		Zona:            zona,
 		Provincia:       provincia,
-		PuntosDeInteres: pois, 
+		PuntosDeInteres: pois,
 	}
 }
 
-
-// ─── MAIN ──────────────────────────────────────────
-func main() {
-	
-	caseData := generarCase()
-
-	fmt.Println("Coordenadas:", caseData.Latitud, caseData.Longitud)
-	fmt.Println("Provincia:", caseData.Provincia)
-	fmt.Println("Zona:", caseData.Zona)
-
-	printPOIs(caseData.PuntosDeInteres)
-
-    
-
-}

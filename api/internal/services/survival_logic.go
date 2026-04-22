@@ -1,12 +1,15 @@
 package services
 
 import (
-	"math/rand/v2"
-	"survival-api/internal/models"
-	"survival-api/internal/repository"
 	"encoding/csv"
+	"encoding/json"
+	"fmt"
+	"math/rand/v2"
 	"os"
 	"strings"
+	"survival-api/internal/clients"
+	"survival-api/internal/models"
+	"survival-api/internal/repository"
 )
 
 type CaseService struct {
@@ -25,39 +28,64 @@ func (s *CaseService) CreateNewCase() (models.Case, error) {
     edad, genero := GenerarDatosAleatorios()
     newCase.Age = edad
     newCase.Gender = genero
-    
-    // latitu longitu
 
 	// llamada a maps
+    caseData := clients.GenerarCase()
+	newCase.Latitud = caseData.Latitud
+	newCase.Longitud = caseData.Longitud
+	newCase.Zona = caseData.Zona
+	newCase.Provincia = caseData.Provincia
+	newCase.PuntosDeInteres = caseData.PuntosDeInteres
 
 	// buscar en dataset función
 	causa, err := s.BuscarAccidenteRandom(newCase.Provincia, newCase.Age, newCase.Gender)
     if err != nil {
         return models.Case{}, err
     }
-    
     newCase.Accidente = causa
 
 	// llamar a ia
-	perfil := {
-		Edad:        newCase.Age,
-		Sexo:        newCase.Gender,
-		Ubicacion:   newCase.Provincia,
-		CausaMuerte: "accidente en la ruta",
-		Transito:    "Muchos autos, clima lluvioso, visibilidad reducida",
+	perfil := models.Case{
+		Age: newCase.Age,
+        Gender: newCase.Gender,
+        Zona: newCase.Zona,
+        PuntosDeInteres: newCase.PuntosDeInteres,
+        Provincia: newCase.Provincia,
+        Accidente: newCase.Accidente,
 	}
 
-	historia, err := LlamarGroq(perfil)
+	historia, err := clients.LlamarGroq(perfil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
 
-	output, err := json.MarshalIndent(historia, "", "  ")
-	if err != nil {
-		fmt.Println("Error serializando salida JSON:", err)
-		os.Exit(1)
+	// separar opciones del resto
+	choices := make([]string, len(historia.Opciones))
+	choiceValues := make([]int, len(historia.Opciones))
+	for i, op := range historia.Opciones {
+		choices[i] = op.Texto
+		if op.EsSalvacion {
+			choiceValues[i] = 1
+		} else {
+			choiceValues[i] = 0
+		}
 	}
+	newCase.Choices = choices
+	newCase.ChoiceValue = choiceValues
+
+	historiaResto := struct {
+		Historia string `json:"historia"`
+		Pregunta string `json:"pregunta"`
+	}{
+		Historia: historia.Historia,
+		Pregunta: historia.Pregunta,
+	}
+	historiaBytes, err := json.Marshal(historiaResto)
+	if err != nil {
+		return models.Case{}, fmt.Errorf("error serializando historia: %w", err)
+	}
+	newCase.Historia = historiaBytes
     
 	// Limpieza del json y escritura de los datos nuevos
 	cases, err := s.repo.GetCases()
