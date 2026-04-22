@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
+	"survival-api/internal/models"
 	"time"
+
 	"github.com/joho/godotenv"
-	"log"
-	
 )
 
 
@@ -113,12 +114,7 @@ func snapToRoad(lat, lon float64) (float64, float64) {
 }
 
 // ─── POIs ──────────────────────────────────────────
-type POI struct {
-	Name       string
-	Categories []string
-}
-
-func getPOIs(lat, lon float64) ([]POI, error) {
+func getPOIs(lat, lon float64) ([]models.POI, error) {
 	url := fmt.Sprintf(
 		"https://api.tomtom.com/search/2/nearbySearch/.json?lat=%f&lon=%f&radius=10000&limit=8&key=%s",
 		lat, lon, apiKey,
@@ -141,9 +137,9 @@ func getPOIs(lat, lon float64) ([]POI, error) {
 
 	json.NewDecoder(resp.Body).Decode(&data)
 
-	var pois []POI
+	var pois []models.POI
 	for _, r := range data.Results {
-		pois = append(pois, POI{
+		pois = append(pois, models.POI{
 			Name:       r.POI.Name,
 			Categories: r.POI.Categories,
 		})
@@ -213,14 +209,14 @@ func getProvincia(lat, lon float64) (string, string) {
 	return "desconocida", ""
 }
 
-func getZona(pois []POI) string {
+func getZona(pois []models.POI) string {
 	if len(pois) > 3 {
 		return "urbano"
 	}
 	return "rural"
 }
 
-func printPOIs(pois []POI) {
+func printPOIs(pois []models.POI) {
 	fmt.Println("POIs cercanos:")
 
 	if len(pois) == 0 {

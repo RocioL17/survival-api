@@ -10,9 +10,14 @@ type Case struct {
 	Latitud         int      `json:"latitud"`
 	Longitud        int      `json:"longitud"`
 	Zona            string   `json:"zone"`
-	PuntosDeInteres []string `json:"interested_points"`
+	PuntosDeInteres []POI `json:"interested_points"`
 	Provincia       string   `json:"province"`
 	Accidente       string   `json:"accident"`
 	Choices         []string `json:"choices"`
 	ChoiceValue     []int    `json:"choice_value"`
+}
+
+type POI struct {
+	Name       string
+	Categories []string
 }
