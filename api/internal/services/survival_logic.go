@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand/v2"
 	"os"
 	"strings"
@@ -23,44 +24,50 @@ func NewCaseService(repo *repository.JSONRepository) *CaseService {
 // CREACIÓN DE UN CASO
 // En internal/services/case_service.go
 func (s *CaseService) CreateNewCase() (models.Case, error) {
-	var newCase models.Case	
-    // 1. Generamos los datos aleatorios sobre el objeto que recibimos
-    edad, genero := GenerarDatosAleatorios()
-    newCase.Age = edad
-    newCase.Gender = genero
+	log.Println("[CreateNewCase] Iniciando creación de caso")
+	var newCase models.Case
 
-	// llamada a maps
-    caseData := clients.GenerarCase()
+	edad, genero := GenerarDatosAleatorios()
+	newCase.Age = edad
+	newCase.Gender = genero
+	log.Printf("[CreateNewCase] Datos aleatorios generados: edad=%d, genero=%s", edad, genero)
+
+	log.Println("[CreateNewCase] Llamando a GenerarCase (maps)...")
+	caseData := clients.GenerarCase()
 	newCase.Latitud = caseData.Latitud
 	newCase.Longitud = caseData.Longitud
 	newCase.Zona = caseData.Zona
 	newCase.Provincia = caseData.Provincia
 	newCase.PuntosDeInteres = caseData.PuntosDeInteres
+	log.Printf("[CreateNewCase] Ubicación obtenida: provincia=%s, zona=%s, lat=%v, lon=%v", newCase.Provincia, newCase.Zona, newCase.Latitud, newCase.Longitud)
 
-	// buscar en dataset función
+	log.Printf("[CreateNewCase] Buscando accidente en dataset: provincia=%s, edad=%d, genero=%s", newCase.Provincia, newCase.Age, newCase.Gender)
 	causa, err := s.BuscarAccidenteRandom(newCase.Provincia, newCase.Age, newCase.Gender)
-    if err != nil {
-        return models.Case{}, err
-    }
-    newCase.Accidente = causa
+	if err != nil {
+		log.Printf("[CreateNewCase] Error buscando accidente: %v", err)
+		return models.Case{}, err
+	}
+	newCase.Accidente = causa
+	log.Printf("[CreateNewCase] Accidente encontrado: %s", causa)
 
-	// llamar a ia
 	perfil := models.Case{
-		Age: newCase.Age,
-        Gender: newCase.Gender,
-        Zona: newCase.Zona,
-        PuntosDeInteres: newCase.PuntosDeInteres,
-        Provincia: newCase.Provincia,
-        Accidente: newCase.Accidente,
+		Age:             newCase.Age,
+		Gender:          newCase.Gender,
+		Zona:            newCase.Zona,
+		PuntosDeInteres: newCase.PuntosDeInteres,
+		Provincia:       newCase.Provincia,
+		Accidente:       newCase.Accidente,
 	}
 
+	log.Println("[CreateNewCase] Llamando a LlamarGroq (IA)...")
 	historia, err := clients.LlamarGroq(perfil)
 	if err != nil {
+		log.Printf("[CreateNewCase] Error en LlamarGroq: %v", err)
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
+	log.Println("[CreateNewCase] Historia generada por IA correctamente")
 
-	// separar opciones del resto
 	choices := make([]string, len(historia.Opciones))
 	choiceValues := make([]int, len(historia.Opciones))
 	for i, op := range historia.Opciones {
@@ -73,6 +80,7 @@ func (s *CaseService) CreateNewCase() (models.Case, error) {
 	}
 	newCase.Choices = choices
 	newCase.ChoiceValue = choiceValues
+	log.Printf("[CreateNewCase] Opciones procesadas: %d opciones", len(choices))
 
 	historiaResto := struct {
 		Historia string `json:"historia"`
@@ -83,30 +91,34 @@ func (s *CaseService) CreateNewCase() (models.Case, error) {
 	}
 	historiaBytes, err := json.Marshal(historiaResto)
 	if err != nil {
+		log.Printf("[CreateNewCase] Error serializando historia: %v", err)
 		return models.Case{}, fmt.Errorf("error serializando historia: %w", err)
 	}
 	newCase.Historia = historiaBytes
-    
-	// Limpieza del json y escritura de los datos nuevos
+
+	log.Println("[CreateNewCase] Guardando caso en repositorio...")
 	cases, err := s.repo.GetCases()
-    if err != nil {
-        s.repo.WriteCases([]models.Case{}) //si hay algún caso previo se borra
-    }
+	if err != nil {
+		log.Printf("[CreateNewCase] No se encontraron casos previos, inicializando lista vacía: %v", err)
+		s.repo.WriteCases([]models.Case{})
+	}
 
-    cases = append(cases, newCase)
-    err = s.repo.WriteCases(cases)
-    if err != nil {
-        return models.Case{}, err
-    }
+	cases = append(cases, newCase)
+	err = s.repo.WriteCases(cases)
+	if err != nil {
+		log.Printf("[CreateNewCase] Error escribiendo casos: %v", err)
+		return models.Case{}, err
+	}
 
-    return newCase, nil
+	log.Println("[CreateNewCase] Caso creado y guardado exitosamente")
+	return newCase, nil
 }
 
 
 // random edad sexo
 func GenerarDatosAleatorios() (int, string) {
 	// Definimos las opciones de género
-	generos := []string{"Masculino", "Femenino", "No binario", "Prefiero no decirlo"}
+	generos := []string{"Masculino", "Femenino"}
 
 	// rand.IntN(n) devuelve un número entre 0 y n-1
 	edad := rand.IntN(73) + 18 // Genera de 0-72 y le suma 18 (Rango: 18 a 90)
@@ -172,12 +184,12 @@ func (s *CaseService) BuscarAccidenteRandom(provincia string, edad int, sexo str
         }
     }
 
-    if len(causasPosibles) == 0 {
-        return "Sin datos para este perfil", nil
-    }
+	log.Printf("[BuscarAccidenteRandom] Filtros: provincia=%q, sexo=%q, grupoEdad=%q — resultados encontrados: %d", provincia, sexo, grupoBuscado, len(causasPosibles))
+	if len(causasPosibles) == 0 {
+		return "Sin datos para este perfil", nil
+	}
 
-    // Retornamos una causa aleatoria de las que cumplen el filtro
-    return causasPosibles[rand.IntN(len(causasPosibles))], nil
+	return causasPosibles[rand.IntN(len(causasPosibles))], nil
 }
 
 // armar prompt

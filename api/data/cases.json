@@ -1,0 +1,76 @@
+[
+  {
+    "name": "",
+    "age": 87,
+    "gender": "No binario",
+    "latitud": -28.343890421418198,
+    "longitud": -64.24181855779014,
+    "zone": "urbano",
+    "interested_points": [
+      {
+        "Name": "Establecimiento Herrera",
+        "Categories": [
+          "important tourist attraction"
+        ]
+      },
+      {
+        "Name": "Escuela Lomitas",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Zapatilla G\u0026E",
+        "Categories": [
+          "clothing accessories: footwear shoe repairs",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Escuela Número 799",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Finca Victoriana",
+        "Categories": [
+          "leisure center"
+        ]
+      },
+      {
+        "Name": "Cementerio Privado Loreto",
+        "Categories": [
+          "cemetery",
+          "park recreation area"
+        ]
+      },
+      {
+        "Name": "Criadero los Paraísos",
+        "Categories": [
+          "animal services",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Almacén Peralta",
+        "Categories": [
+          "shop"
+        ]
+      }
+    ],
+    "province": "Santiago del Estero",
+    "accident": "Sin datos para este perfil",
+    "choices": [
+      "Salir a la calle para investigar",
+      "Llamar a la Escuela Lomitas, que está cerca de tu casa, para pedir ayuda",
+      "Buscar un teléfono en casa para llamar a la policía"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": "eyJoaXN0b3JpYSI6IkVyZXMgTWFyY2VsbyBGZXJuw6FuZGV6LCB1biBhbmNpYW5vIG5vIGJpbmFyaW8gcXVlIHZpdmUgZW4gU2FudGlhZ28gZGVsIEVzdGVyby4gQWNhYmFzIGRlIGRlc3BlcnRhciBlbiB0dSBjYXNhIHBvciB1biBmdWVydGUgZG9sb3IgZGUgY2FiZXphIHkgbm8gcHVlZGVzIHJlY29yZGFyIHF1w6kgc3VjZWRpw7MgYW5vY2hlLiBNaXJhIGEgdHUgYWxyZWRlZG9yIHkgdmVzIHF1ZSB0dSBoYWJpdGFjacOzbiBlc3TDoSBlbiBkZXNvcmRlbiwgY29uIG9iamV0b3Mgcm90b3MgeSBtdWVibGVzIGRlc3Ryb3phZG9zLiBEZSByZXBlbnRlLCBlc2N1Y2hhcyB1biBydWlkbyBleHRyYcOxbyBwcm92ZW5pZW50ZSBkZSBsYSBjYWxsZS4gwr9RdcOpIGVzdMOhcyBoYWNpZW5kbz8iLCJwcmVndW50YSI6IsK/UXXDqSBkZWNpZGVzIGhhY2VyIGFsIGVzY3VjaGFyIGVsIHJ1aWRvIGVuIGxhIGNhbGxlPyJ9"
+  }
+]
