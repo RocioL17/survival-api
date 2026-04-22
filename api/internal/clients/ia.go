@@ -10,17 +10,18 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"survival-api/internal/models"
 	"time"
 )
 
 // ── Estructuras del REQUEST a Gemini ─────────────────────────────────────────
 
-// se define un GroqRequest que es el formato que espera la API de Groq para generar una respuesta basada en un prompt del sistema y un mensaje del usuario. 
+// se define un GroqRequest que es el formato que espera la API de Groq para generar una respuesta basada en un prompt del sistema y un mensaje del usuario.
 // Incluye el modelo a usar, la temperatura para la generación, y el formato de respuesta esperado (en este caso, un objeto JSON).
 type GroqRequest struct {
 	Model          string         `json:"model"`
-	Messages       []Message      `json:"messages"` // El prompt del sistema y el mensaje del usuario
-	Temperature    float64        `json:"temperature"` // Controla la creatividad de la respuesta, valores más altos generan respuestas más creativas
+	Messages       []Message      `json:"messages"`        // El prompt del sistema y el mensaje del usuario
+	Temperature    float64        `json:"temperature"`     // Controla la creatividad de la respuesta, valores más altos generan respuestas más creativas
 	ResponseFormat ResponseFormat `json:"response_format"` // Especifica que queremos la respuesta en formato JSON
 }
 
@@ -46,8 +47,8 @@ type GroqResponse struct {
 // ── Estructura del JSON que pedimos DENTRO de la respuesta ───────────────────
 
 type Opcion struct {
-	ID          string `json:"id"` // Identificador de la opción (A, B, C)
-	Texto       string `json:"texto"` // Texto descriptivo de la opción
+	ID          string `json:"id"`          // Identificador de la opción (A, B, C)
+	Texto       string `json:"texto"`       // Texto descriptivo de la opción
 	EsSalvacion bool   `json:"esSalvacion"` // Indica si esta opción es la correcta para salvar al jugador
 }
 
@@ -60,42 +61,88 @@ type HistoriaResponse struct {
 // ── Perfil del jugador ESTO ME PASA RO
 
 type PerfilJugador struct {
-	Edad        int    `json:"edad"` 
+	Edad        int    `json:"edad"`
 	Sexo        string `json:"sexo"`
 	Ubicacion   string `json:"ubicacion"`
 	CausaMuerte string `json:"causaMuerte"`
 	Transito    string `json:"transito"`
-
 }
 
 // ── Configuración de Groq  ────────────────────────────────────────────────────────────
 
 const (
-	groqURL          = "https://api.groq.com/openai/v1/chat/completions" 
+	groqURL          = "https://api.groq.com/openai/v1/chat/completions"
 	defaultGroqModel = "llama-3.1-8b-instant"
 	maxRetries       = 2
 )
 
 var systemPrompt = `Sos el narrador de un juego de supervivencia llamado "Vive o Muere".
 Tu tarea es generar una historia corta y dramática basada en el perfil y situación del jugador.
+
 REGLAS:
-- Respondé ÚNICAMENTE con un JSON válido.
+- Respondé ÚNICAMENTE con un JSON válido, sin texto extra ni bloques de código.
 - El JSON debe tener exactamente esta estructura:
 {
-  "historia": "Narración en 3-4 oraciones.",
-  "pregunta": "Pregunta de decisión.",
+  "nombre": "Nombre realista según edad, sexo y país de la ubicación",
+  "historia": "Narración en 3-4 oraciones en segunda persona (vos/tú). Mencioná el lugar específico.",
+  "pregunta": "Pregunta de decisión urgente y concreta.",
   "opciones": [
     { "id": "A", "texto": "...", "esSalvacion": false },
     { "id": "B", "texto": "...", "esSalvacion": true },
     { "id": "C", "texto": "...", "esSalvacion": false }
   ]
 }
-- Exactamente 3 opciones, exactamente 1 con esSalvacion=true.`
+- Exactamente 3 opciones, exactamente 1 con esSalvacion=true.
+- La opción correcta debe variar de posición (no siempre la B).
+- El tono debe ser tenso y realista, como un documental de supervivencia.`
 
-func buildUserPrompt(p PerfilJugador) string {
+func buildUserPrompt(p models.Case) string {
+	// Contexto de zona
+	zonaCtx := "zona urbana con acceso a servicios"
+	if p.Zona == "rural" {
+		zonaCtx = "zona rural alejada, con difícil acceso a servicios de emergencia"
+	}
+
+	// Puntos de interés cercanos
+	puntosCtx := "No hay puntos de interés relevantes cercanos."
+	nombres := make([]string, len(p.PuntosDeInteres))
+	for i, poi := range p.PuntosDeInteres {
+		if len(poi.Categories) > 0 {
+			nombres[i] = poi.Name + " (" + strings.Join(poi.Categories, "/") + ")"
+		} else {
+			nombres[i] = poi.Name
+		}
+	}
+	puntosCtx = "Lugares cercanos que el jugador podría usar: " + strings.Join(nombres, ", ") + "."
+
 	return fmt.Sprintf(`Generá una historia para este jugador:
-- Edad: %d años, Sexo: %s, Ubicación: %s, Causa: %s.
-Creá peligro realista y detalles del lugar.`, p.Edad, p.Sexo, p.Ubicacion, p.CausaMuerte)
+
+PERFIL:
+- Edad: %d años
+- Sexo: %s
+- Provincia/Región: %s
+- Coordenadas: lat %s, lon %s
+- Tipo de zona: %s
+- Accidente/situación: %s
+
+ENTORNO:
+- %s
+
+INSTRUCCIONES:
+- Usá la provincia y el tipo de zona para darle autenticidad al lugar.
+- Si es zona rural, las opciones deben reflejar la lejanía (ej: caminar hasta el pueblo, llamar por radio, usar recursos naturales).
+- Si es zona urbana, las opciones pueden incluir los puntos de interés cercanos (hospitales, iglesias, farmacias, etc.).
+- La opción correcta debe ser la más lógica dado el contexto, no necesariamente la más obvia.
+- Generá un nombre realista para el personaje según su edad, sexo y región.`,
+		p.Age,
+		p.Gender,
+		p.Provincia,
+		p.Latitud,
+		p.Longitud,
+		zonaCtx,
+		p.Accidente,
+		puntosCtx,
+	)
 }
 
 // esto es para manejar variables de entorno desde un archivo .env
@@ -138,9 +185,9 @@ func loadDotEnv(path string) error {
 	return scanner.Err()
 }
 
-// esto es para manejar reintentos en caso de errores temporales al llamar a la API de Groq, 
+// esto es para manejar reintentos en caso de errores temporales al llamar a la API de Groq,
 // como timeouts o errores 500. Se intentará hasta maxRetries veces antes de devolver un error definitivo.
-func LlamarGroq(perfil PerfilJugador) (*HistoriaResponse, error) {
+func LlamarGroq(perfil models.Case) (*HistoriaResponse, error) {
 	if err := loadDotEnv(".env"); err != nil {
 		return nil, fmt.Errorf("error cargando .env: %w", err)
 	}
@@ -179,8 +226,8 @@ func LlamarGroq(perfil PerfilJugador) (*HistoriaResponse, error) {
 	return nil, fmt.Errorf("groq falló tras %d intentos: %w", maxRetries, lastErr)
 }
 
-// esta función hace la llamada HTTP a la API de Groq, maneja la respuesta, 
-// extrae el JSON de la respuesta (incluso si viene con texto adicional o formateado como código), 
+// esta función hace la llamada HTTP a la API de Groq, maneja la respuesta,
+// extrae el JSON de la respuesta (incluso si viene con texto adicional o formateado como código),
 // y valida que el JSON tenga la estructura esperada antes de devolverlo.
 func doRequest(url string, apiKey string, reqBody GroqRequest) (*HistoriaResponse, error) {
 	bodyBytes, err := json.Marshal(reqBody)
@@ -231,7 +278,7 @@ func doRequest(url string, apiKey string, reqBody GroqRequest) (*HistoriaRespons
 	return &historia, nil
 }
 
-// esta función intenta extraer un objeto JSON válido de un texto que puede contener texto adicional, formateo de código, o estar mal formateado. 
+// esta función intenta extraer un objeto JSON válido de un texto que puede contener texto adicional, formateo de código, o estar mal formateado.
 // Primero intenta validar el texto completo, luego busca bloques de código, y finalmente intenta extraer un substring entre llaves.
 func extractJSON(text string) (string, error) {
 	trimmed := strings.TrimSpace(text)
@@ -293,13 +340,15 @@ func validarHistoria(h *HistoriaResponse) error {
 
 // esto se tiene que remplazar con toda la info que se obtenga del dataset y la api de mapas
 
-func comoUsarlo() {
-	perfil := PerfilJugador{
-		Edad:        22,
-		Sexo:        "femenino",
-		Ubicacion:   "Misiones, Argentina",
-		CausaMuerte: "accidente en la ruta",
-		Transito:    "Muchos autos, clima lluvioso, visibilidad reducida",
+func comoUsar() {
+	perfil := models.Case{
+		Age:       22,
+		Gender:    "Femenino",
+		Zona:      "Misiones, Argentina",
+		Accidente: "Accidente en la ruta",
+		Latitud:   -34.3917,
+		Longitud:  -58.8731,
+		Provincia: "Misiones",
 	}
 
 	historia, err := LlamarGroq(perfil)
