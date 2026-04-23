@@ -2,7 +2,7 @@
     import { onMount, onDestroy } from "svelte";
 
     let { lat, lng } = $props<{ lat: number; lng: number }>();
-
+    console.log("Latitud:", lat, "Longitud:", lng);
     /** @type {HTMLDivElement | null} */
     let mapContainer: HTMLDivElement | null = null;
 

@@ -6,21 +6,43 @@
 	import Map from "$lib/components/Map.svelte";
 	import { onMount } from "svelte";
 
-	let datos = $state([]);
+	type CaseData = {
+		latitud?: number;
+		longitud?: number;
+		story?: {
+			historia: string;
+		};
+		[key: string]: any;
+		age?: number;
+		gender?: string;
+		zone?: string;
+		accident?: string;
+		name?: string;
+	};
+
+	let caseData: CaseData = $state({});
+	let selectedIndex = $state<number | null>(null);
+	let deadIndex = $state<number | null>(null);
+	let loading = $state(false);
+	let dataLoading = $state(true);
 
 	onMount(async () => {
-		const res = await fetch("http://localhost:8080/case", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		console.log(res);
-		datos = await res.json();
+		try {
+			const res = await fetch("http://localhost:8080/case", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			caseData = await res.json();
+			console.log("Datos recibidos:", caseData);
+		} finally {
+			dataLoading = false;
+		}
 	});
 
 	$effect(() => {
-		console.log(datos);
+		console.log("caseData actualizado:", caseData);
 	});
 	type Option = {
 		key: string;
@@ -33,29 +55,50 @@
 		message: string;
 	};
 
-	const options: Option[] = [
-		{
-			key: "A",
-			text: "Huir! Correr hacia el callejon antes de que dispare.",
-			dead: true,
-		},
-		{
-			key: "B",
-			text: "Hackear el sistema de sensores del dron rapidamente.",
-			dead: false,
-		},
-		{
-			key: "C",
-			text: "Aceptar la inyeccion pacificamente y esperar lo mejor.",
-			dead: false,
-		},
-	];
+	const options = $derived(
+		caseData.choices?.map((text: string, i: number) => ({
+			keyLabel: String.fromCharCode(65 + i),
+			text,
+			dead: deadIndex === i,
+			selected: selectedIndex === i,
+		})) ?? [],
+	);
+
+	async function selectOption(index: number) {
+		if (loading || selectedIndex === index) return;
+		selectedIndex = index;
+		loading = true;
+		// Simula una llamada a la API para verificar la opción seleccionada
+		const res = await fetch("http://localhost:8080/options", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({choice: index}),
+		});
+
+		if (!res.ok) {
+			console.error("Error del servidor:", res.status);
+			loading = false;
+			return;
+		}
+
+		const {value}  = await res.json();
+		console.log(value);
+
+		// if (!response.survived) {
+		// 	deadIndex = index;
+		// }
+
+		loading = false;
+	}
 
 	let selectedOptionKey = $state("");
 	let showSuccessPanel = $state(false);
 	let showErrorPanel = $state(false);
 
-	function handleOptionSelect(option: Option) {
+	function handleOptionSelect(index: number) {
+		const option = options[index];
 		selectedOptionKey = option.key;
 		showSuccessPanel = !option.dead;
 		showErrorPanel = option.dead;
@@ -70,6 +113,18 @@
 		selectedOptionKey = "";
 	}
 </script>
+
+{#if dataLoading}
+	<div class="loading-screen">
+		<div class="loading-box">
+			<span class="loading-heart">♡</span>
+			<p class="loading-text">CARGANDO...</p>
+			<div class="loading-bar">
+				<div class="loading-fill"></div>
+			</div>
+		</div>
+	</div>
+{/if}
 
 {#if showSuccessPanel}
 	<SuccessPanel onContinue={handleContinue} />
@@ -98,12 +153,12 @@
 					<div class="pixel-avatar" aria-hidden="true"></div>
 				</div>
 
-				<h2>SUJETO 404</h2>
+				<h2>{caseData.name ?? "SUJETO 404"}</h2>
 
 				<div class="identity-grid">
-					<span>Edad:</span><span>32</span>
-					<span>Sexo:</span><span>M</span>
-					<span>Nac:</span><span>ARG</span>
+					<span>Edad:</span><span>{caseData.age ?? "N/A"}</span>
+					<span>Sexo:</span><span>{caseData.gender ?? "N/A"}</span>
+					<span>Zona:</span><span>{caseData.zone ?? "N/A"}</span>
 				</div>
 			</RetroPanel>
 
@@ -116,7 +171,10 @@
 				<div class="map-strip" aria-hidden="true"></div>
 				<div class="location-box">
 					<div class="location-label">UBICACION ACTUAL:</div>
-					<Map lat={-34.3917} lng={-58.8731} />
+					<Map
+						lat={caseData.latitud ?? 0}
+						lng={caseData.longitud ?? 0}
+					/>
 				</div>
 			</RetroPanel>
 		</section>
@@ -128,31 +186,20 @@
 			className="story-panel"
 		>
 			<div class="story-text">
-				<p>
-					El sol de la manana ilumina suavemente las ruinas del Sector
-					7. Un dron de vigilancia se detiene bruscamente frente a ti,
-					escaneando tus signos vitales.
-				</p>
-				<p>
-					'CIUDADANO 404. ANOMALIA CARDIACA DETECTADA. REQUIERE
-					ASISTENCIA INMEDIATA.'
-				</p>
-				<p>
-					El dron prepara una inyeccion de sedante de alto impacto.
-					Tus pulsaciones se disparan al ver la aguja.
-				</p>
+				<p>{caseData.story?.historia ?? "Cargando historia..."}</p>
+				<!-- Aquí se mostraría la historia del caso -->
 			</div>
 
 			<div class="question">COMO PROCEDES?</div>
 
 			<div class="options-wrap">
-				{#each options as option}
+				{#each options as option, i}
 					<OptionButton
 						keyLabel={option.key}
 						text={option.text}
 						dead={option.dead}
-						selected={selectedOptionKey === option.key}
-						onSelect={() => handleOptionSelect(option)}
+						selected={option.selected}
+						onSelect={() => selectOption(i)}
 					/>
 				{/each}
 			</div>
@@ -390,6 +437,65 @@
 		.question {
 			font-size: clamp(11px, 3vw, 14px);
 		}
+	}
+
+	.loading-screen {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		background: #fff;
+		display: grid;
+		place-items: center;
+	}
+
+	.loading-box {
+		display: grid;
+		gap: 16px;
+		place-items: center;
+		padding: 32px 40px;
+		border: 4px solid #2d3436;
+		box-shadow: 8px 8px 0 #2d3436;
+		background: #fff;
+	}
+
+	.loading-heart {
+		font-family: "Press Start 2P", monospace;
+		font-size: 28px;
+		color: #ff7675;
+		animation: heartbeat 0.8s ease-in-out infinite;
+	}
+
+	.loading-text {
+		margin: 0;
+		font-family: "Press Start 2P", monospace;
+		font-size: clamp(12px, 1.5vw, 16px);
+		letter-spacing: 3px;
+		color: #2d3436;
+	}
+
+	.loading-bar {
+		width: 200px;
+		height: 16px;
+		border: 3px solid #2d3436;
+		background: #dfe6e9;
+		overflow: hidden;
+	}
+
+	.loading-fill {
+		height: 100%;
+		background: #0984e3;
+		animation: loading-progress 1.4s ease-in-out infinite;
+	}
+
+	@keyframes heartbeat {
+		0%, 100% { transform: scale(1); }
+		50% { transform: scale(1.3); }
+	}
+
+	@keyframes loading-progress {
+		0% { width: 0%; }
+		60% { width: 100%; }
+		100% { width: 100%; }
 	}
 
 	@media (max-width: 600px) {

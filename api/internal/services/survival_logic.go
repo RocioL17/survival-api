@@ -181,12 +181,15 @@ func (s *CaseService) BuscarAccidenteRandom(provincia string) (causa string, eda
 // REVISAR PUNTAJE
 func (s *CaseService) RevisarPuntaje(opcion int) int {
 	cases, err := s.repo.GetCases()
-	if err != nil {
-		return 2
+	if err != nil || len(cases) == 0 {
+		return 0
 	}
 
-	value := cases[0].ChoiceValue[opcion]
-	return value
+	last := cases[len(cases)-1]
+	if opcion < 0 || opcion >= len(last.ChoiceValue) {
+		return 0
+	}
+	return last.ChoiceValue[opcion]
 }
 
 // borrar datos

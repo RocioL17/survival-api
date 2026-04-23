@@ -26,7 +26,14 @@ func NewServer(port int) *Server {
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
- s.Router.ServeHTTP(w, r)
+	// Create a handler that calls the router
+	routerHandler := func(w http.ResponseWriter, r *http.Request) {
+		s.Router.ServeHTTP(w, r)
+	}
+	
+	// Apply middleware to the router handler
+	handler := s.ApplyMiddleware(routerHandler)
+	handler(w, r)
 }
 
 func (s *Server) Run() error {
