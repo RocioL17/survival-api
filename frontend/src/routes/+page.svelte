@@ -74,7 +74,7 @@
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({choice: index}),
+			body: JSON.stringify({ choice: index }),
 		});
 
 		if (!res.ok) {
@@ -83,12 +83,15 @@
 			return;
 		}
 
-		const {value}  = await res.json();
+		const { value } = await res.json();
 		console.log(value);
 
-		// if (!response.survived) {
-		// 	deadIndex = index;
-		// }
+		if (value === 0) {
+			deadIndex = index;
+			showErrorPanel = true;
+		} else {
+			showSuccessPanel = true;
+		}
 
 		loading = false;
 	}
@@ -488,14 +491,25 @@
 	}
 
 	@keyframes heartbeat {
-		0%, 100% { transform: scale(1); }
-		50% { transform: scale(1.3); }
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.3);
+		}
 	}
 
 	@keyframes loading-progress {
-		0% { width: 0%; }
-		60% { width: 100%; }
-		100% { width: 100%; }
+		0% {
+			width: 0%;
+		}
+		60% {
+			width: 100%;
+		}
+		100% {
+			width: 100%;
+		}
 	}
 
 	@media (max-width: 600px) {
