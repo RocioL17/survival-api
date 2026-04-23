@@ -1,58 +1,59 @@
 package main
 
 import (
- "context"
- "fmt"
- "log"
- "os"
- "os/signal"
- "syscall"
- "time"
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
- "survival-api/internal/handlers"
- "survival-api/internal/repository"
- "survival-api/internal/services"
- "survival-api/server"
+	"survival-api/internal/handlers"
+	"survival-api/internal/repository"
+	"survival-api/internal/services"
+	"survival-api/server"
 )
 
 func main() {
- repo := repository.NewJSONRepository("data/cases.json")
- caseService := services.NewCaseService(repo)
- caseHandler := handlers.NewCaseHandler(caseService)
+	repo := repository.NewJSONRepository("data/cases.json")
+	caseService := services.NewCaseService(repo)
+	caseHandler := handlers.NewCaseHandler(caseService)
 
- s := server.NewServer(8080)
+	s := server.NewServer(8080)
 
- s.Use(server.LoggingMiddleware)
- s.Use(server.RecoveryMiddleware)
+	s.Use(server.LoggingMiddleware)
+	s.Use(server.RecoveryMiddleware)
+    s.Use(server.AuthMiddleware)
 
- // Register routes
- s.Router.GET("/case", caseHandler.MakeCase)
- s.Router.POST("/options", handlers.VerifyChoice)
- s.Router.NotFound(handlers.NotFoundHandler)
+	// Register routes
+	s.Router.GET("/case", caseHandler.MakeCase)
+	s.Router.POST("/options", handlers.VerifyChoice)
+	s.Router.NotFound(handlers.NotFoundHandler)
 
- // Set up graceful shutdown
- stop := make(chan os.Signal, 1)
- signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+	// Set up graceful shutdown
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
- go func() {
-  if err := s.Run(); err != nil {
-   log.Fatalf("Error starting server: %v", err)
-  }
- }()
+	go func() {
+		if err := s.Run(); err != nil {
+			log.Fatalf("Error starting server: %v", err)
+		}
+	}()
 
- fmt.Println("Server is running on http://localhost:8080")
+	fmt.Println("Server is running on http://localhost:8080")
 
- //Interrupt signal
- <-stop
+	//Interrupt signal
+	<-stop
 
- fmt.Println("Shutting down server...")
+	fmt.Println("Shutting down server...")
 
- ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
- defer cancel()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
- if err := s.Shutdown(ctx); err != nil {
-  log.Fatalf("Server forced to shutdown: %v", err)
- }
+	if err := s.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
 
- fmt.Println("Server gracefully stopped")
+	fmt.Println("Server gracefully stopped")
 }

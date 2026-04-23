@@ -1,10 +1,27 @@
 <script lang="ts">
-	import OptionButton from '$lib/components/OptionButton.svelte';
-	import RetroPanel from '$lib/components/RetroPanel.svelte';
-	import SuccessPanel from '$lib/components/SuccessPanel.svelte';
-	import ErrorPanel from '$lib/components/ErrorPanel.svelte';
-    import Map from '$lib/components/Map.svelte';
+	import OptionButton from "$lib/components/OptionButton.svelte";
+	import RetroPanel from "$lib/components/RetroPanel.svelte";
+	import SuccessPanel from "$lib/components/SuccessPanel.svelte";
+	import ErrorPanel from "$lib/components/ErrorPanel.svelte";
+	import Map from "$lib/components/Map.svelte";
+	import { onMount } from "svelte";
 
+	let datos = $state([]);
+
+	onMount(async () => {
+		const res = await fetch("http://localhost:8080/api/case", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		console.log(res);
+		datos = await res.json();
+	});
+
+	$effect(() => {
+		console.log(datos);
+	});
 	type Option = {
 		key: string;
 		text: string;
@@ -12,17 +29,29 @@
 	};
 
 	type NotificationState = {
-		type: 'success' | 'danger';
+		type: "success" | "danger";
 		message: string;
 	};
 
 	const options: Option[] = [
-		{ key: 'A', text: 'Huir! Correr hacia el callejon antes de que dispare.', dead: true },
-		{ key: 'B', text: 'Hackear el sistema de sensores del dron rapidamente.', dead: false },
-		{ key: 'C', text: 'Aceptar la inyeccion pacificamente y esperar lo mejor.', dead: false }
+		{
+			key: "A",
+			text: "Huir! Correr hacia el callejon antes de que dispare.",
+			dead: true,
+		},
+		{
+			key: "B",
+			text: "Hackear el sistema de sensores del dron rapidamente.",
+			dead: false,
+		},
+		{
+			key: "C",
+			text: "Aceptar la inyeccion pacificamente y esperar lo mejor.",
+			dead: false,
+		},
 	];
 
-	let selectedOptionKey = $state('');
+	let selectedOptionKey = $state("");
 	let showSuccessPanel = $state(false);
 	let showErrorPanel = $state(false);
 
@@ -38,7 +67,7 @@
 
 	function handleRetry() {
 		showErrorPanel = false;
-		selectedOptionKey = '';
+		selectedOptionKey = "";
 	}
 </script>
 
@@ -59,7 +88,12 @@
 
 	<div class="game-layout">
 		<section class="left-column">
-			<RetroPanel title="Estado de Personaje" borderColor="#0984e3" tagWidth={224} className="character-panel">
+			<RetroPanel
+				title="Estado de Personaje"
+				borderColor="#0984e3"
+				tagWidth={224}
+				className="character-panel"
+			>
 				<div class="avatar-wrap">
 					<div class="pixel-avatar" aria-hidden="true"></div>
 				</div>
@@ -73,7 +107,12 @@
 				</div>
 			</RetroPanel>
 
-			<RetroPanel title="Mapa del Mundo" borderColor="#00b894" tagWidth={172} className="map-panel">
+			<RetroPanel
+				title="Mapa del Mundo"
+				borderColor="#00b894"
+				tagWidth={172}
+				className="map-panel"
+			>
 				<div class="map-strip" aria-hidden="true"></div>
 				<div class="location-box">
 					<div class="location-label">UBICACION ACTUAL:</div>
@@ -82,16 +121,25 @@
 			</RetroPanel>
 		</section>
 
-		<RetroPanel title="Historia" borderColor="#2d3436" tagWidth={108} className="story-panel">
+		<RetroPanel
+			title="Historia"
+			borderColor="#2d3436"
+			tagWidth={108}
+			className="story-panel"
+		>
 			<div class="story-text">
 				<p>
-					El sol de la manana ilumina suavemente las ruinas del Sector 7. Un dron de vigilancia se detiene
-					bruscamente frente a ti, escaneando tus signos vitales.
+					El sol de la manana ilumina suavemente las ruinas del Sector
+					7. Un dron de vigilancia se detiene bruscamente frente a ti,
+					escaneando tus signos vitales.
 				</p>
-				<p>'CIUDADANO 404. ANOMALIA CARDIACA DETECTADA. REQUIERE ASISTENCIA INMEDIATA.'</p>
 				<p>
-					El dron prepara una inyeccion de sedante de alto impacto. Tus pulsaciones se disparan al ver la
-					aguja.
+					'CIUDADANO 404. ANOMALIA CARDIACA DETECTADA. REQUIERE
+					ASISTENCIA INMEDIATA.'
+				</p>
+				<p>
+					El dron prepara una inyeccion de sedante de alto impacto.
+					Tus pulsaciones se disparan al ver la aguja.
 				</p>
 			</div>
 
@@ -117,7 +165,8 @@
 		width: min(100%, 1240px);
 		height: 100dvh;
 		margin: 0 auto;
-		padding: clamp(8px, 1.2vw, 16px) clamp(10px, 1.6vw, 20px) clamp(10px, 1.6vw, 20px);
+		padding: clamp(8px, 1.2vw, 16px) clamp(10px, 1.6vw, 20px)
+			clamp(10px, 1.6vw, 20px);
 		display: grid;
 		grid-template-rows: auto minmax(0, 1fr);
 		gap: clamp(14px, 2vw, 24px);
@@ -140,7 +189,7 @@
 
 	.game-title h1 {
 		margin: 0;
-		font-family: 'Press Start 2P', monospace;
+		font-family: "Press Start 2P", monospace;
 		font-size: clamp(14px, 1.5vw, 20px);
 		letter-spacing: 2px;
 		text-align: center;
@@ -148,7 +197,7 @@
 	}
 
 	.heart {
-		font-family: 'Press Start 2P', monospace;
+		font-family: "Press Start 2P", monospace;
 		font-size: 14px;
 		color: #ff7675;
 	}
@@ -182,8 +231,11 @@
 		width: 84px;
 		height: 84px;
 		border: 4px solid #2d3436;
-		background:
-			radial-gradient(circle at 50% 16%, #fdcb6e 0 18%, transparent 19%),
+		background: radial-gradient(
+				circle at 50% 16%,
+				#fdcb6e 0 18%,
+				transparent 19%
+			),
 			radial-gradient(circle at 34% 38%, #fdcb6e 0 14%, transparent 15%),
 			radial-gradient(circle at 66% 38%, #fdcb6e 0 14%, transparent 15%),
 			radial-gradient(circle at 50% 58%, #0984e3 0 11%, transparent 12%),
@@ -192,7 +244,7 @@
 
 	h2 {
 		margin: 0;
-		font-family: 'Press Start 2P', monospace;
+		font-family: "Press Start 2P", monospace;
 		font-size: clamp(14px, 1.5vw, 20px);
 		line-height: 1.2;
 		text-align: center;
@@ -203,7 +255,7 @@
 		display: grid;
 		grid-template-columns: 1fr auto;
 		row-gap: 2px;
-		font-family: 'VT323', monospace;
+		font-family: "VT323", monospace;
 		font-size: clamp(18px, 1.6vw, 22px);
 		letter-spacing: 1px;
 		text-transform: uppercase;
@@ -220,9 +272,17 @@
 		height: 20px;
 		border: 2px solid #2d3436;
 		border-radius: 6px;
-		background:
-			repeating-linear-gradient(90deg, #74b9ff 0 15px, #55efc4 15px 30px, #00b894 30px 45px),
-			repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 4px);
+		background: repeating-linear-gradient(
+				90deg,
+				#74b9ff 0 15px,
+				#55efc4 15px 30px,
+				#00b894 30px 45px
+			),
+			repeating-linear-gradient(
+				180deg,
+				rgba(0, 0, 0, 0.1) 0 1px,
+				transparent 1px 4px
+			);
 	}
 
 	.location-box {
@@ -234,7 +294,7 @@
 	}
 
 	.location-label {
-		font-family: 'Press Start 2P', monospace;
+		font-family: "Press Start 2P", monospace;
 		font-size: clamp(8px, 0.8vw, 10px);
 		letter-spacing: 1px;
 		color: #00b894;
@@ -257,7 +317,7 @@
 
 	.story-text p {
 		margin: 0;
-		font-family: 'VT323', monospace;
+		font-family: "VT323", monospace;
 		font-size: clamp(18px, 1.6vw, 28px);
 		line-height: 1.1;
 		color: #2d3436;
@@ -267,7 +327,7 @@
 		padding: 10px 12px;
 		border-left: 4px solid #0984e3;
 		background: rgba(116, 185, 255, 0.1);
-		font-family: 'Press Start 2P', monospace;
+		font-family: "Press Start 2P", monospace;
 		font-size: clamp(12px, 1.3vw, 16px);
 		line-height: 1.35;
 		color: #0984e3;
