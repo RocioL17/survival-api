@@ -54,9 +54,6 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
   r.notFoundHandler(w, req)
   return
  }
- if r.server != nil {
-  handler = r.server.ApplyMiddleware(handler)
- }
  handler(w, req)
 }
 
