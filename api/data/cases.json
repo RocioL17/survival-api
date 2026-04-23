@@ -72,5 +72,701 @@
       0
     ],
     "story": "eyJoaXN0b3JpYSI6IkVyZXMgTWFyY2VsbyBGZXJuw6FuZGV6LCB1biBhbmNpYW5vIG5vIGJpbmFyaW8gcXVlIHZpdmUgZW4gU2FudGlhZ28gZGVsIEVzdGVyby4gQWNhYmFzIGRlIGRlc3BlcnRhciBlbiB0dSBjYXNhIHBvciB1biBmdWVydGUgZG9sb3IgZGUgY2FiZXphIHkgbm8gcHVlZGVzIHJlY29yZGFyIHF1w6kgc3VjZWRpw7MgYW5vY2hlLiBNaXJhIGEgdHUgYWxyZWRlZG9yIHkgdmVzIHF1ZSB0dSBoYWJpdGFjacOzbiBlc3TDoSBlbiBkZXNvcmRlbiwgY29uIG9iamV0b3Mgcm90b3MgeSBtdWVibGVzIGRlc3Ryb3phZG9zLiBEZSByZXBlbnRlLCBlc2N1Y2hhcyB1biBydWlkbyBleHRyYcOxbyBwcm92ZW5pZW50ZSBkZSBsYSBjYWxsZS4gwr9RdcOpIGVzdMOhcyBoYWNpZW5kbz8iLCJwcmVndW50YSI6IsK/UXXDqSBkZWNpZGVzIGhhY2VyIGFsIGVzY3VjaGFyIGVsIHJ1aWRvIGVuIGxhIGNhbGxlPyJ9"
+  },
+  {
+    "name": "Martín Gómez",
+    "age": 28,
+    "gender": "masculino",
+    "latitud": -32.041774204391416,
+    "longitud": -58.45509781229538,
+    "zone": "urbano",
+    "interested_points": [
+      {
+        "Name": "Club Atlético Vázquez",
+        "Categories": [
+          "bar",
+          "nightlife"
+        ]
+      },
+      {
+        "Name": "Escuela nº 18 'Artigas'",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Escuela Nº75 'Almirante Guillermo Brown'",
+        "Categories": [
+          "primary school",
+          "school"
+        ]
+      },
+      {
+        "Name": "José Hernández 50 Agrotecnica Escuela Estatal en Colonia El Carmen",
+        "Categories": [
+          "high school",
+          "school"
+        ]
+      },
+      {
+        "Name": "Arado Antiguo P. Cazes",
+        "Categories": [
+          "important tourist attraction",
+          "monument"
+        ]
+      },
+      {
+        "Name": "Almacén Francou",
+        "Categories": [
+          "restaurant"
+        ]
+      },
+      {
+        "Name": "Bungalows Amancay",
+        "Categories": [
+          "bed breakfast guest houses",
+          "hotel/motel"
+        ]
+      },
+      {
+        "Name": "Dos Gardenias",
+        "Categories": [
+          "chalet",
+          "holiday rental"
+        ]
+      }
+    ],
+    "province": "Entre Ríos",
+    "accident": "Agresión con disparo de otras armas de fuego, y las no especificadas",
+    "choices": [
+      "Dirigirte a la escuela nº 18 'Artigas', que está justo al lado, y pedir ayuda a los profesores y alumnos",
+      "Intentar llegar al club Atlético Vázquez, que tiene un bar abierto, y pedir ayuda a los clientes y personal",
+      "Ir al hospital 'Dr. Pedro María Albarracín' que está a unos 500 metros de distancia y esperar a que lleguen los policías"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás tendido en el suelo, en el corazón de la ciudad de Paraná, Entre Ríos. Acabas de ser atacado con un disparo de arma de fuego mientras caminabas por la calle. El ruido del tiroteo ha atraído la atención de la gente cercana, pero nadie ha llamado a la policía todavía. Debes moverte rápidamente antes de que la situación se vuelva más peligrosa.",
+      "pregunta": "¿Qué decides hacer para buscar ayuda?"
+    }
+  },
+  {
+    "name": "Tomás Rodríguez",
+    "age": 88,
+    "gender": "masculino",
+    "latitud": -46.45232721445646,
+    "longitud": -68.18101145196022,
+    "zone": "rural",
+    "interested_points": null,
+    "province": "Santa Cruz",
+    "accident": "Ocupante de automóvil lesionado en accidente de transporte sin colisión",
+    "choices": [
+      "Intentar conducir hasta la siguiente estación de servicio, a unos 30 kilómetros de distancia",
+      "Usar tu radio de emergencia para llamar a la policía de tránsito y solicitar ayuda",
+      "Dejar el vehículo y caminar hasta el pueblo más cercano, que se encuentra a una hora y media a pie"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás sentado en la cUncha de tu camión, en medio de la Patagonia, en la provincia de Santa Cruz. Te duele la cabeza y te sientes un poco aturdido después de un accidente sin colisión mientras conducías por la Ruta Nacional N° 5. Recuerdas que ibas a Río Gallegos para visitar a tu familia, pero ahora te encuentras solo y alejado de cualquier ayuda. El sol comienza a ponerse y te das cuenta de que necesitas actuar rápidamente para salvar tu vida.",
+      "pregunta": "¿Qué debes hacer para obtener ayuda?"
+    }
+  },
+  {
+    "name": "Juana Gómez",
+    "age": 82,
+    "gender": "femenino",
+    "latitud": -29.91491999640096,
+    "longitud": -64.86635945340133,
+    "zone": "rural",
+    "interested_points": null,
+    "province": "Córdoba",
+    "accident": "Agresión con objeto cortante",
+    "choices": [
+      "Encuentra un lugar seguro para acampar durante la noche y tratas de limpiar y vendar tus heridas en la mañana con la luz del día.",
+      "Diriges hacia el pequeño pueblo que se ve desde la quebrada, aunque sabes que la caminata larga, la oscuridad y la posibilidad de que tu atacante aún esté en la zona harán que el viaje sea peligroso.",
+      "Usas la botella de agua para intentar llamar la atención de los posibles transeúntes nocturnos y esperas que alguien te escuche."
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás sangrando profusamente después de ser atacada por un desconocido en un estrecho sendero rural de la provincia de Córdoba. La vista de la pequeña estancia que se encuentra al otro lado de la quebrada parece estar a horas caminando. No hay señal de celular y solo tienes a tu lado una pequeña botella de agua y el resto de tus pertenencias. La noche se avecina rápidamente.",
+      "pregunta": "¿Qué haces?"
+    }
+  },
+  {
+    "name": "Juan Antonio Martínez",
+    "age": 63,
+    "gender": "masculino",
+    "latitud": -35.36982304919358,
+    "longitud": -64.65873668009284,
+    "zone": "rural",
+    "interested_points": null,
+    "province": "La Pampa",
+    "accident": "Ocupante de automóvil lesionado por colisión con  vehículo de transporte pesado o autobús",
+    "choices": [
+      "Intentas caminar hasta el pueblo en busca de ayuda",
+      "Buscas objetos en el automóvil que puedan usarse para enviar un mensaje de auxilio",
+      "Te acuestas en el suelo y esperas a que alguien te encuentre"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú te despiertas con dolor en la cabeza y el pecho. Recuerdas haber sido golpeado por un autobús en la ruta 35, en el pueblo de Santa Isabel, en La Pampa. La última cosa que recuerdas es intentar pararte después de la colisión. Mira a tu alrededor y solo ves hierba y algunos árboles. No hay señales de vida humanas cerca. La distancia hasta el pueblo es probablemente de al menos 5 kilómetros.",
+      "pregunta": "¿Qué haces primero?"
+    }
+  },
+  {
+    "name": "Juan Carlos Pereyra",
+    "age": 52,
+    "gender": "masculino",
+    "latitud": -39.17288283034884,
+    "longitud": -64.26289710721885,
+    "zone": "rural",
+    "interested_points": null,
+    "province": "Río Negro",
+    "accident": "Contacto traumático con maquinaria agrícola",
+    "choices": [
+      "Intentar caminar hasta el pueblo más cercano, que se encuentra a más de 3 horas de caminata. La distancia es grande y no sabes si podrás llegar con tu condición.",
+      "Usar el teléfono de tu tractor para llamar a la estación de emergencias por radio. La señal es débil, pero podrías pedir ayuda sin tener que moverte tanto.",
+      "Buscar abrigo en un cobertizo cercano y esperar a que la mañana llegue para intentar buscar ayuda. La noche está cerca y no tienes medicamentos para tratar la herida."
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú eres Juan Carlos, un campesino de 52 años de la zona rural de Río Negro. Acabas de sufrir un terrible accidente con maquinaria agrícola en tu chacra. Al despertar, te encuentras con una gran cantidad de sangre en la cabeza y una profunda herida en la pierna. Tu esposa, María, te ha abandonado para buscar ayuda, pero no ha regresado. Debes tomar una decisión rápidamente para salvar tu vida.",
+      "pregunta": "¿Cuál es la mejor opción para obtener ayuda?"
+    }
+  },
+  {
+    "name": "María del Rosario Vásquez",
+    "age": 71,
+    "gender": "femenino",
+    "latitud": -40.19998850291011,
+    "longitud": -70.2624294819347,
+    "zone": "rural",
+    "interested_points": [
+      {
+        "Name": "Carlo Acutis-Honda",
+        "Categories": [
+          "important tourist attraction"
+        ]
+      },
+      {
+        "Name": "Escuela Nº 27-La Pintada",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Corona",
+        "Categories": [
+          "geographic feature",
+          "mountain peak"
+        ]
+      }
+    ],
+    "province": "Neuquén",
+    "accident": "Peatón lesionado por colisión con automóvil, camioneta o furgoneta",
+    "choices": [
+      "Pide al joven que te lleve hasta la escuela para tratar de obtener atención médica lo antes posible.",
+      "Pide al joven que busque ayuda en la radio más cercana, ya que no tienes señal de teléfono.",
+      "Pide al joven que te ayude a encontrar un río cercano para tratar de lavarte las heridas y reducir la infección."
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás a punto de perder el conocimiento, recién saliendo de un accidente en el que una camioneta te golpeó mientras caminabas. Te encuentras en una zona rural alejada de la civilización, en la provincia de Neuquén. El dolor en el lado izquierdo de tu pecho es insoportable. De repente, distingues la figura de un joven que se acerca a ti con una manta en la mano. Estás cerca del pico Corona, y la Escuela Nº 27-La Pintada está a un par de kilómetros de distancia.",
+      "pregunta": "¿Qué decides hacer?"
+    }
+  },
+  {
+    "name": "Pedro García",
+    "age": 84,
+    "gender": "masculino",
+    "latitud": -42.45824641365109,
+    "longitud": -65.53935554486797,
+    "zone": "rural",
+    "interested_points": null,
+    "province": "Chubut",
+    "accident": "Inhalación e ingestión de alimento que causa obstrucción de las vías respiratorias",
+    "choices": [
+      "Encender la radio y escuchar si hay alguna señal de ayuda en la zona",
+      "Salir de la cabaña y buscar ayuda caminando en dirección al pueblo más cercano, a unos 5 kilómetros de distancia",
+      "Intentar usar el fuego de la chimenea para calentar el aire y relajar tus vías respiratorias"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás sentado en una cabaña rústica en medio de la Patagonia chubutense, rodeado de bosques y montañas. Has tenido una ataque de asma devastador después de comer cierto alimento fresco que encontraste en el río. Tu aire se va reduciendo por segundos y no hay señal de celular para llamar a ayuda. El clima está empeorando rápidamente y pronto comenzará a nevar.",
+      "pregunta": "¿Qué debes hacer ahora?"
+    }
+  },
+  {
+    "name": "Agustín Gómez",
+    "age": 32,
+    "gender": "masculino",
+    "latitud": -24.754545473388063,
+    "longitud": -64.26954581100642,
+    "zone": "urbano",
+    "interested_points": [
+      {
+        "Name": "Escuela de Educación Técnica Nº 3.167 José Monaldi",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Anta Maquinarias",
+        "Categories": [
+          "agricultural supplies",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Grupo Agroempresa",
+        "Categories": [
+          "company"
+        ]
+      },
+      {
+        "Name": "Lartirigoyen",
+        "Categories": [
+          "agricultural supplies",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Cargill Las Lajitas-Oficina",
+        "Categories": [
+          "company"
+        ]
+      },
+      {
+        "Name": "Metagri Srl",
+        "Categories": [
+          "company"
+        ]
+      },
+      {
+        "Name": "Aerosoluciones",
+        "Categories": [
+          "shop"
+        ]
+      },
+      {
+        "Name": "Estación las Lajitas",
+        "Categories": [
+          "national",
+          "railway station"
+        ]
+      }
+    ],
+    "province": "Salta",
+    "accident": "Motociclista lesionado por colisión con automóvil, camioneta o furgoneta",
+    "choices": [
+      "Te levantas y te pones a caminar hacia la estación de policía más cercana para denunciar el accidente.",
+      "Te diriges hacia la tienda de Anta Maquinarias, que está a unos cuantos metros de distancia, y les pides ayuda para llamar a un taxi o a la ambulancia.",
+      "Buscas ayuda en la Escuela de Educación Técnica Nº 3.167 José Monaldi, que está justo al lado de la Escuela, esperando que alguien pueda ayudarte a llamar a un médico o a la ambulancia."
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás tendido en la carretera, rodeado de gritos y luces de las motos y automóviles que pasan. La colisión con la camioneta te ha dejado con un dolor agudo en la cabeza y la pierna izquierda. Te das cuenta de que tienes un corte en la frente y sangran tus dedos. Te das cuenta de que estás en la zona urbana de Salta, cerca del barrio de El Encanto. Recién pasaste por la Escuela de Educación Técnica Nº 3.167 José Monaldi.",
+      "pregunta": "¿Qué haces en primer lugar?"
+    }
+  },
+  {
+    "name": "Luciana Gómez",
+    "age": 31,
+    "gender": "femenino",
+    "latitud": -27.15560831248473,
+    "longitud": -60.90137699719405,
+    "zone": "rural",
+    "interested_points": [
+      {
+        "Name": "Escuela Provincial N°326",
+        "Categories": [
+          "school"
+        ]
+      }
+    ],
+    "province": "Chaco",
+    "accident": "Exposición a humos, fuegos o llamas no especificados",
+    "choices": [
+      "Intentas caminar la distancia para llegar a la escuela provincial, ya que es el lugar más cercano donde podrías encontrar ayuda.",
+      "Sientes que no puedes caminar y que lo mejor es esperar un poco para ver si alguien viene hacia ti, es un lugar conocido y hay gente por aquí, seguro alguien te encuentra.",
+      "Recuerdas que tienes una radio en el rancho, aunque no sé si la hayas dejado en marcha. Intentas encontrarla y llamar a alguien a través de ella."
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Estás en el interior del Chaco, en el paraje de Laguna Brava, donde solo hay pocos habitantes. Acabas de escapar de un incendio en tu rancho. Te duele la cabeza, tu ropa está cubierta de cenizas y humo. La escuela provincial está a pocos kilómetros, pero no sabes si habrá alguien allí que pueda ayudarte. Te sientes mareada y el silbido de un tórtola te hace sentir que no estás soleta.",
+      "pregunta": "¿Qué haces para tratar de localizar ayuda?"
+    }
+  },
+  {
+    "name": "Juan Antonio Sánchez",
+    "age": 81,
+    "gender": "masculino",
+    "latitud": -30.734462404832033,
+    "longitud": -61.83025592581167,
+    "zone": "urbano",
+    "interested_points": [
+      {
+        "Name": "One Propiedades",
+        "Categories": [
+          "real estate agents",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Escuela Juan Beiro",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Núcleo Rural Escuela Secundaria Orientada N4500",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Escuela 6084 'Arturo Capdevila'",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Escuela N 6321 Colonia Bossi Sur",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Club 25 de Mayo",
+        "Categories": [
+          "nightlife"
+        ]
+      },
+      {
+        "Name": "Biblioteca Popular Teresa de Calcuta",
+        "Categories": [
+          "welfare organization"
+        ]
+      },
+      {
+        "Name": "Pluspagos Santa Fe Servicios",
+        "Categories": [
+          "shop"
+        ]
+      }
+    ],
+    "province": "Santa Fe",
+    "accident": "Contacto traumático con otras maquinarias, y las no especificadas",
+    "choices": [
+      "Intentar llegar a la Biblioteca Popular Teresa de Calcuta para buscar ayuda",
+      "Decidirte a esperar a que alguien venga a buscarlo",
+      "Usar el teléfono de la oficina de One Propiedades para llamar a la policía o a un médico"
+    ],
+    "choice_value": [
+      1,
+      0,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás tendido en el suelo, rodeado de maquinaria destrozada, en el predio de One Propiedades, en la ciudad de Santa Fe. Tu cabeza late con dolor y recuerdas que te golpeaste con un tractor al intentar repararlo. El dueño de la empresa te ha abandonado y no sabes qué hacer. La Biblioteca Popular Teresa de Calcuta está cerca, pero no estás seguro de que puedas llegar hasta allí.",
+      "pregunta": "¿Qué deberías hacer primero?"
+    }
+  },
+  {
+    "name": "Fernando Rodríguez",
+    "age": 43,
+    "gender": "masculino",
+    "latitud": -45.82086990718555,
+    "longitud": -69.55789596590125,
+    "zone": "rural",
+    "interested_points": null,
+    "province": "Chubut",
+    "accident": "Agresión con objeto cortante",
+    "choices": [
+      "Intentar cubrir la herida con una de tus chaquetas para reducir la pérdida de sangre y usar tu teléfono para llamar a la atención de la Guardia del Bosque, pero no tienes cobertura por la zona",
+      "Usar el objeto que te atacó como un bisturí improvisado para cortar las heridas y aplicar presión directamente para evitar la hemorragia y luego caminar hasta el pueblo más cercano para buscar ayuda",
+      "Desconectar la herida, buscar plantas en la zona para crear un vendaje improvisado y luego usar tu linterna para intentar llamar la atención de alguien en un radiocasete de la casa de la vecina, a 1 km de distancia"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú te encuentras en una zona rural de Chubut, con una agresión contigo y un objeto cortante en el suelo a dos metros de distancia. Has sido atacado en un camino vecinal, cerca de la entrada al parque nacional Laguna Colorada, y no hay nadie a la vista. El impacto te ha dejado herido y debes tomar una decisión rápida para salvar tu vida.",
+      "pregunta": "¿Qué decides hacer para tratar la herida y llamar auxilio?"
+    }
+  },
+  {
+    "name": "Margarita González",
+    "age": 71,
+    "gender": "femenino",
+    "latitud": -29.264930722963637,
+    "longitud": -59.277982998986445,
+    "zone": "urbano",
+    "interested_points": [
+      {
+        "Name": "Granja Santa Margarita",
+        "Categories": [
+          "leisure center"
+        ]
+      },
+      {
+        "Name": "Santa Rosa. Despensa",
+        "Categories": [
+          "food drinks: butchers",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Escuela Nº 716 María Mercedes Dho",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Escuela Agrotécnica 'Mercedes Cossio'",
+        "Categories": [
+          "school"
+        ]
+      },
+      {
+        "Name": "Salon de Eventos",
+        "Categories": [
+          "banquet rooms",
+          "restaurant"
+        ]
+      },
+      {
+        "Name": "Cementerio Lomas de",
+        "Categories": [
+          "cemetery",
+          "park recreation area"
+        ]
+      },
+      {
+        "Name": "Corral Conunitario Buena Vista",
+        "Categories": [
+          "public amenity",
+          "toilet"
+        ]
+      },
+      {
+        "Name": "Establecimiento la Amalia",
+        "Categories": [
+          "park",
+          "park recreation area"
+        ]
+      }
+    ],
+    "province": "Corrientes",
+    "accident": "Peatón lesionado por colisión con automóvil, camioneta o furgoneta",
+    "choices": [
+      "Tratar de comunicarte con los otros pacientes para intentar saber más sobre la situación del hospital.",
+      "Tratar de llamar a alguien de tu familia para que venga a visitarte y te ayude a tomar decisiones.",
+      "Intentar escapar del hospital para buscar ayuda en otros lugares de la ciudad."
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú te despiertas en un hospital de Corrientes, después de ser trasladada allí debido a un grave accidente de tránsito. Recuerdas que eras peatón cuando un vehículo te atropelló. El médico te dice que estás en estado crítico y que necesitas atención inmediata. Miras a su alrededor y ves que estás en una habitación compartida, con otros dos pacientes. El hospital parece estar lleno de gente y hay un gran estrés en el ambiente.",
+      "pregunta": "Debes decidir qué hacer a continuación:"
+    }
+  },
+  {
+    "name": "María Lucía Gómez",
+    "age": 28,
+    "gender": "femenino",
+    "latitud": -25.01150085566305,
+    "longitud": -58.97040977797441,
+    "zone": "urbano",
+    "interested_points": [
+      {
+        "Name": "Kíosco Eríc",
+        "Categories": [
+          "market",
+          "supermarkets hypermarkets"
+        ]
+      },
+      {
+        "Name": "Ponte Guapa",
+        "Categories": [
+          "beauty salon",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Lapacho Indumentaria",
+        "Categories": [
+          "clothing accessories: general",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Mimi Mercado 'Burrito'",
+        "Categories": [
+          "shop"
+        ]
+      },
+      {
+        "Name": "MIA Restopub",
+        "Categories": [
+          "shop"
+        ]
+      },
+      {
+        "Name": "Reparaciones Crassh",
+        "Categories": [
+          "company",
+          "home appliance repair"
+        ]
+      },
+      {
+        "Name": "Carnicería Luján",
+        "Categories": [
+          "food drinks: butchers",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Despensa Vital",
+        "Categories": [
+          "food drinks: grocers",
+          "shop"
+        ]
+      }
+    ],
+    "province": "Formosa",
+    "accident": "Motociclista lesionado por colisión con peatón o animal",
+    "choices": [
+      "Esfuerzas por levantarte y caminar hacia el kiosco para pedir ayuda, a pesar de tu dolor",
+      "Preguntas al hombre que parece llamado a la policía si alguien ha llamado al 101 o si tiene un teléfono para que puedas pedir ayuda",
+      "Intentas acercarte a la gente alrededor de ti y pide que alguien llame a un taxi para llevarte al hospital, pero tu dolor te impide hablar con claridad"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás tendida en el suelo, cerca de un kiosco en el corazón de la ciudad de Formosa. Recuerdas haber sido atropellada por una motocicleta mientras caminabas por la calle. Te duele la cabeza y no puedes moverte. La gente se reúne a tu alrededor, preocupada por tu bienestar. Un niño intenta llamar la atención de alguien, mientras que otro hombre parece llamado a la policía.",
+      "pregunta": "¿Qué haces?"
+    }
+  },
+  {
+    "name": "Ricardo Gómez",
+    "age": 76,
+    "gender": "masculino",
+    "latitud": -23.242045335438217,
+    "longitud": -64.26913330403795,
+    "zone": "urbano",
+    "interested_points": [
+      {
+        "Name": "Camping La Loma. Hipólito Yrigoyen, Oran, Salta",
+        "Categories": [
+          "sports center"
+        ]
+      },
+      {
+        "Name": "Tabacal",
+        "Categories": [
+          "railway station"
+        ]
+      },
+      {
+        "Name": "Hostal Las Marías",
+        "Categories": [
+          "hotel",
+          "hotel/motel"
+        ]
+      },
+      {
+        "Name": "IPS Yrigoyen",
+        "Categories": [
+          "company"
+        ]
+      },
+      {
+        "Name": "Corralón Benítez",
+        "Categories": [
+          "hardware",
+          "shop"
+        ]
+      },
+      {
+        "Name": "Plazoleta 29 de Junio",
+        "Categories": [
+          "park",
+          "park recreation area"
+        ]
+      },
+      {
+        "Name": "Inmobiliaria Lucas",
+        "Categories": [
+          "real estate agents",
+          "shop"
+        ]
+      },
+      {
+        "Name": "El Gordo",
+        "Categories": [
+          "restaurant"
+        ]
+      }
+    ],
+    "province": "Salta",
+    "accident": "Otras caídas en el mismo nivel",
+    "choices": [
+      "Al hospital local para que te atiendan lo antes posible",
+      "A la comisaría de policía para denunciar el accidente y obtener ayuda",
+      "A un lugar cercano a ti para descansar un rato antes de seguir adelante"
+    ],
+    "choice_value": [
+      0,
+      1,
+      0
+    ],
+    "story": {
+      "historia": "Tú estás en Oran, Salta, en el centro de la ciudad. Te has caído en la calle y te duele la cabeza. Recuerdas que la policía y el hospital son muy cercanos. Te sientes mareado y no sabes qué hacer.",
+      "pregunta": "¿Dónde te diriges en primer lugar?"
+    }
   }
 ]

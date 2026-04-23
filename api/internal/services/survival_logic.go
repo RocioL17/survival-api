@@ -27,20 +27,29 @@ func (s *CaseService) CreateNewCase() (models.Case, error) {
 	log.Println("[CreateNewCase] Iniciando creación de caso")
 	var newCase models.Case
 
-	log.Println("[CreateNewCase] Llamando a GenerarCase (maps)...")
-	caseData := clients.GenerarCase()
-	newCase.Latitud = caseData.Latitud
+	var caseData models.Case
+	var causa string
+	var edad int
+	var genero string
+	for {
+		log.Println("[CreateNewCase] Llamando a GenerarCase (maps)...")
+		caseData = clients.GenerarCase()
+		newCase.Provincia = caseData.Provincia
+		log.Printf("[CreateNewCase] Ubicación obtenida: provincia=%s, zona=%s, lat=%v, lon=%v", newCase.Provincia, newCase.Zona, newCase.Latitud, newCase.Longitud)
+
+		var loopErr error
+		causa, edad, genero, loopErr = s.BuscarAccidenteRandom(newCase.Provincia)
+		if loopErr == nil {
+			break
+		}
+		log.Printf("[CreateNewCase] No se encontraron datos para provincia=%s, reintentando...", newCase.Provincia)
+	}
+
+    newCase.Latitud = caseData.Latitud
 	newCase.Longitud = caseData.Longitud
 	newCase.Zona = caseData.Zona
 	newCase.Provincia = caseData.Provincia
 	newCase.PuntosDeInteres = caseData.PuntosDeInteres
-	log.Printf("[CreateNewCase] Ubicación obtenida: provincia=%s, zona=%s, lat=%v, lon=%v", newCase.Provincia, newCase.Zona, newCase.Latitud, newCase.Longitud)
-
-	causa, edad, genero, err := s.BuscarAccidenteRandom(newCase.Provincia)
-	if err != nil {
-		log.Printf("[CreateNewCase] Error buscando accidente: %v", err)
-		return models.Case{}, err
-	}
 	newCase.Age = edad
 	newCase.Gender = genero
 	newCase.Accidente = causa
@@ -176,17 +185,13 @@ func (s *CaseService) BuscarAccidenteRandom(provincia string) (causa string, eda
 	return "", 0, "", fmt.Errorf("no se encontraron accidentes para provincia=%q después de 20 intentos", provincia)
 }
 
-// armar prompt
-
 // REVISAR PUNTAJE
 func (s *CaseService) RevisarPuntaje(opcion int) int {
 	cases, err := s.repo.GetCases()
 	if err != nil || len(cases) == 0 {
-		return 0
+		return 2
 	}
 
 	value := cases[len(cases)-1].ChoiceValue[opcion]
 	return value
 }
-
-// borrar datos
