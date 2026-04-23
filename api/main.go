@@ -24,11 +24,11 @@ func main() {
 
 	s.Use(server.LoggingMiddleware)
 	s.Use(server.RecoveryMiddleware)
-    s.Use(server.CorsMiddleware)
+	s.Use(server.CorsMiddleware)
 
 	// Register routes
 	s.Router.GET("/case", caseHandler.MakeCase)
-	s.Router.POST("/options", handlers.VerifyChoice)
+	s.Router.POST("/options", caseHandler.VerifyChoice)
 	s.Router.NotFound(handlers.NotFoundHandler)
 
 	// Set up graceful shutdown

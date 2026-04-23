@@ -33,9 +33,19 @@ func (h *CaseHandler) MakeCase(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(processedCase)
 }
 
-func VerifyChoice(w http.ResponseWriter, r *http.Request) {
+func (h *CaseHandler) VerifyChoice(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	var body struct {
+		Choice int `json:"choice"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		http.Error(w, "Body inválido", http.StatusBadRequest)
+		return
+	}
+
+	result := h.service.RevisarPuntaje(body.Choice)
+	json.NewEncoder(w).Encode(map[string]bool{"survived": result == 1})
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {

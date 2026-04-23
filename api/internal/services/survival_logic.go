@@ -76,6 +76,8 @@ func (s *CaseService) CreateNewCase() (models.Case, error) {
 	}
 	newCase.Choices = choices
 	newCase.ChoiceValue = choiceValues
+
+	newCase.Name = historia.Nombre
 	log.Printf("[CreateNewCase] Opciones procesadas: %d opciones", len(choices))
 
 	historiaResto := struct {

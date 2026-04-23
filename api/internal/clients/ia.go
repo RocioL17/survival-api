@@ -55,6 +55,7 @@ type Opcion struct {
 type HistoriaResponse struct {
 	Historia string   `json:"historia"` // Narración de la historia en 3-4 oraciones
 	Pregunta string   `json:"pregunta"` // Pregunta de decisión para el jugador
+	Nombre   string   `json:"nombre"`
 	Opciones []Opcion `json:"opciones"` // Lista de opciones de decisión, exactamente 3, con una sola opción de salvación
 }
 
