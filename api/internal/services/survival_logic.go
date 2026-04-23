@@ -14,11 +14,11 @@ import (
 )
 
 type CaseService struct {
-    repo *repository.JSONRepository
+	repo *repository.JSONRepository
 }
 
 func NewCaseService(repo *repository.JSONRepository) *CaseService {
-    return &CaseService{repo: repo}
+	return &CaseService{repo: repo}
 }
 
 // CREACIÓN DE UN CASO
@@ -26,11 +26,6 @@ func NewCaseService(repo *repository.JSONRepository) *CaseService {
 func (s *CaseService) CreateNewCase() (models.Case, error) {
 	log.Println("[CreateNewCase] Iniciando creación de caso")
 	var newCase models.Case
-
-	edad, genero := GenerarDatosAleatorios()
-	newCase.Age = edad
-	newCase.Gender = genero
-	log.Printf("[CreateNewCase] Datos aleatorios generados: edad=%d, genero=%s", edad, genero)
 
 	log.Println("[CreateNewCase] Llamando a GenerarCase (maps)...")
 	caseData := clients.GenerarCase()
@@ -41,14 +36,15 @@ func (s *CaseService) CreateNewCase() (models.Case, error) {
 	newCase.PuntosDeInteres = caseData.PuntosDeInteres
 	log.Printf("[CreateNewCase] Ubicación obtenida: provincia=%s, zona=%s, lat=%v, lon=%v", newCase.Provincia, newCase.Zona, newCase.Latitud, newCase.Longitud)
 
-	log.Printf("[CreateNewCase] Buscando accidente en dataset: provincia=%s, edad=%d, genero=%s", newCase.Provincia, newCase.Age, newCase.Gender)
-	causa, err := s.BuscarAccidenteRandom(newCase.Provincia, newCase.Age, newCase.Gender)
+	causa, edad, genero, err := s.BuscarAccidenteRandom(newCase.Provincia)
 	if err != nil {
 		log.Printf("[CreateNewCase] Error buscando accidente: %v", err)
 		return models.Case{}, err
 	}
+	newCase.Age = edad
+	newCase.Gender = genero
 	newCase.Accidente = causa
-	log.Printf("[CreateNewCase] Accidente encontrado: %s", causa)
+	log.Printf("[CreateNewCase] Accidente encontrado: %s (edad=%d, genero=%s)", causa, edad, genero)
 
 	perfil := models.Case{
 		Age:             newCase.Age,
@@ -114,96 +110,81 @@ func (s *CaseService) CreateNewCase() (models.Case, error) {
 	return newCase, nil
 }
 
-
 // random edad sexo
 func GenerarDatosAleatorios() (int, string) {
-	// Definimos las opciones de género
-	generos := []string{"Masculino", "Femenino"}
-
-	// rand.IntN(n) devuelve un número entre 0 y n-1
-	edad := rand.IntN(73) + 18 // Genera de 0-72 y le suma 18 (Rango: 18 a 90)
-	
-	// Elegimos un índice al azar del arreglo de géneros
+	generos := []string{"masculino", "femenino"}
+	edad := rand.IntN(73) + 18 // Rango: 18 a 90
 	generoElegido := generos[rand.IntN(len(generos))]
-
 	return edad, generoElegido
 }
 
 func obtenerGrupoEdad(edad int) string {
-    switch {
-    case edad >= 15 && edad <= 19:
-        return "15 a 19 años"
-    case edad >= 20 && edad <= 24:
-        return "20 a 24 años"
-    case edad >= 25 && edad <= 29:
-        return "25 a 29 años"
-    case edad >= 30 && edad <= 34:
-        return "30 a 34 años"
-    case edad >= 35 && edad <= 39:
-        return "35 a 39 años"
-    default:
-        return "Otros grupos" // Ajustar según los nombres reales de tu CSV
-    }
+	switch {
+	case edad <= 14:
+		return "01.De a 0  a 14 anios"
+	case edad <= 34:
+		return "02.De 15 a 34 anios"
+	case edad <= 54:
+		return "03.De 35 a 54 anios"
+	case edad <= 74:
+		return "04.De 55 a 74 anios"
+	default:
+		return "05.De 75 anios y mas"
+	}
 }
 
-// buscar en dataset para elegir un caso
-func (s *CaseService) BuscarAccidenteRandom(provincia string, edad int, sexo string) (string, error) {
-    f, err := os.Open("data/dataset.csv")
-    if err != nil {
-        return "", err
-    }
-    defer f.Close()
+// buscar en dataset para elegir un caso, generando edad/género aleatoriamente y reintentando hasta encontrar resultados
+func (s *CaseService) BuscarAccidenteRandom(provincia string) (causa string, edad int, genero string, err error) {
+	f, err := os.Open("data/dataset.csv")
+	if err != nil {
+		return "", 0, "", err
+	}
+	defer f.Close()
 
-    reader := csv.NewReader(f)
-    reader.Comma = ';' // IMPORTANTE: Tu CSV usa punto y coma
-    records, err := reader.ReadAll()
-    if err != nil {
-        return "", err
-    }
-
-    // Convertimos la edad fija al formato del CSV
-    grupoBuscado := obtenerGrupoEdad(edad)
-    
-    var causasPosibles []string
-
-    for i, row := range records {
-        if i == 0 { continue } // Saltamos la cabecera
-
-        // Filtros basados en tus columnas:
-        // row[2] = jurisdicion_residencia_nombre
-        // row[6] = Sexo (o row[5] para sexo_id)
-        // row[9] = grupo_edad
-        
-        matchProvincia := strings.TrimSpace(row[2]) == provincia
-        matchSexo      := strings.TrimSpace(row[6]) == sexo
-        matchEdad      := strings.TrimSpace(row[9]) == grupoBuscado
-
-        if matchProvincia && matchSexo && matchEdad {
-            // row[4] es cie10_clasificacion (el nombre de la causa)
-            causasPosibles = append(causasPosibles, row[4])
-        }
-    }
-
-	log.Printf("[BuscarAccidenteRandom] Filtros: provincia=%q, sexo=%q, grupoEdad=%q — resultados encontrados: %d", provincia, sexo, grupoBuscado, len(causasPosibles))
-	if len(causasPosibles) == 0 {
-		return "Sin datos para este perfil", nil
+	reader := csv.NewReader(f)
+	reader.Comma = ';'
+	records, err := reader.ReadAll()
+	if err != nil {
+		return "", 0, "", err
 	}
 
-	return causasPosibles[rand.IntN(len(causasPosibles))], nil
+	for intento := 1; intento <= 2000; intento++ {
+		edad, genero = GenerarDatosAleatorios()
+		grupoBuscado := obtenerGrupoEdad(edad)
+
+		var causasPosibles []string
+		for i, row := range records {
+			if i == 0 {
+				continue
+			}
+			if strings.TrimSpace(row[2]) == provincia &&
+				strings.TrimSpace(row[6]) == genero &&
+				strings.TrimSpace(row[9]) == grupoBuscado {
+				causasPosibles = append(causasPosibles, row[4])
+			}
+		}
+
+		log.Printf("[BuscarAccidenteRandom] Intento %d — provincia=%q, genero=%q, grupoEdad=%q — resultados: %d", intento, provincia, genero, grupoBuscado, len(causasPosibles))
+
+		if len(causasPosibles) > 0 {
+			return causasPosibles[rand.IntN(len(causasPosibles))], edad, genero, nil
+		}
+	}
+
+	return "", 0, "", fmt.Errorf("no se encontraron accidentes para provincia=%q después de 20 intentos", provincia)
 }
 
 // armar prompt
 
 // REVISAR PUNTAJE
-func (s *CaseService) RevisarPuntaje(opcion int) (int) {
+func (s *CaseService) RevisarPuntaje(opcion int) int {
 	cases, err := s.repo.GetCases()
-    if err != nil {
-        return 2
-    }
+	if err != nil {
+		return 2
+	}
 
-	value := cases[0].ChoiceValue[opcion];
-	return value;
+	value := cases[0].ChoiceValue[opcion]
+	return value
 }
 
 // borrar datos
-
