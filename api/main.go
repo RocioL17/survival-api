@@ -24,7 +24,7 @@ func main() {
 
 	s.Use(server.LoggingMiddleware)
 	s.Use(server.RecoveryMiddleware)
-    s.Use(server.AuthMiddleware)
+    s.Use(server.CorsMiddleware)
 
 	// Register routes
 	s.Router.GET("/case", caseHandler.MakeCase)

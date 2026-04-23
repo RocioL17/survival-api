@@ -9,7 +9,7 @@
 	let datos = $state([]);
 
 	onMount(async () => {
-		const res = await fetch("http://localhost:8080/api/case", {
+		const res = await fetch("http://localhost:8080/case", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
