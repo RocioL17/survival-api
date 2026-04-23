@@ -133,7 +133,8 @@ INSTRUCCIONES:
 - Si es zona rural, las opciones deben reflejar la lejanía (ej: caminar hasta el pueblo, llamar por radio, usar recursos naturales).
 - Si es zona urbana, las opciones pueden incluir los puntos de interés cercanos (hospitales, iglesias, farmacias, etc.).
 - La opción correcta debe ser la más lógica dado el contexto, no necesariamente la más obvia.
-- Generá un nombre realista para el personaje según su edad, sexo y región.`,
+- Generá un nombre realista para el personaje según su edad, sexo y región.
+- Ten en cuenta los puntos de interes que recibas que consideres relevantes para desarrollar la historia y las opciones`,
 		p.Age,
 		p.Gender,
 		p.Provincia,
