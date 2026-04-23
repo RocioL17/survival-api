@@ -185,7 +185,7 @@ func (s *CaseService) RevisarPuntaje(opcion int) int {
 		return 2
 	}
 
-	value := cases[0].ChoiceValue[opcion]
+	value := cases[len(cases)-1].ChoiceValue[opcion]
 	return value
 }
 

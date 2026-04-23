@@ -45,9 +45,9 @@ func (h *CaseHandler) VerifyChoice(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := h.service.RevisarPuntaje(body.Choice)
-	
+
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(map[string]int{"value": result})
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
