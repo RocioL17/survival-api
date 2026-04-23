@@ -11,6 +11,7 @@
 		longitud?: number;
 		story?: {
 			historia: string;
+			pregunta: string;
 		};
 		[key: string]: any;
 		age?: number;
@@ -192,7 +193,7 @@
 				<!-- Aquí se mostraría la historia del caso -->
 			</div>
 
-			<div class="question">COMO PROCEDES?</div>
+			<div class="question">{caseData.story?.pregunta ?? "Cargando pregunta..."}</div>
 
 			<div class="options-wrap">
 				{#each options as option, i}
