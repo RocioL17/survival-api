@@ -2,25 +2,34 @@
     import { onMount, onDestroy } from "svelte";
 
     let { lat, lng } = $props<{ lat: number; lng: number }>();
-    console.log("Latitud:", lat, "Longitud:", lng);
-    /** @type {HTMLDivElement | null} */
-    let mapContainer: HTMLDivElement | null = null;
 
-    /** @type {import("leaflet").Map | null} */
-    let map: import("leaflet").Map | null = null;
+    let mapContainer: HTMLDivElement | null = null;
+    let map = $state<import("leaflet").Map | null>(null);
+    let marker = $state<import("leaflet").Marker | null>(null);
 
     onMount(async () => {
         const L = (await import("leaflet")).default;
-
         if (!mapContainer) return;
 
-        map = L.map(mapContainer).setView([lat, lng], 13);
+        map = L.map(mapContainer).setView([0, 0], 2);
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: "© OpenStreetMap contributors",
         }).addTo(map);
+    });
 
-        L.marker([lat, lng]).addTo(map).bindPopup("¡Estás aquí!").openPopup();
+    $effect(() => {
+        if (!map || !lat || !lng) return;
+
+        map.setView([lat, lng], 13);
+
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            import("leaflet").then(({ default: L }) => {
+                marker = L.marker([lat, lng]).addTo(map!).bindPopup("¡Estás aquí!").openPopup();
+            });
+        }
     });
 
     onDestroy(() => {

@@ -35,15 +35,11 @@
 				},
 			});
 			caseData = await res.json();
-			console.log("Datos recibidos:", caseData);
 		} finally {
 			dataLoading = false;
 		}
 	});
 
-	$effect(() => {
-		console.log("caseData actualizado:", caseData);
-	});
 	type Option = {
 		key: string;
 		text: string;
@@ -100,15 +96,18 @@
 	let showSuccessPanel = $state(false);
 	let showErrorPanel = $state(false);
 
-	function handleOptionSelect(index: number) {
-		const option = options[index];
-		selectedOptionKey = option.key;
-		showSuccessPanel = !option.dead;
-		showErrorPanel = option.dead;
-	}
-
-	function handleContinue() {
+	async function handleContinue() {
 		showSuccessPanel = false;
+		selectedIndex = null;
+		deadIndex = null;
+		dataLoading = true;
+
+		try {
+			const res = await fetch("http://localhost:8080/case");
+			caseData = await res.json();
+		} finally {
+			dataLoading = false;
+		}
 	}
 
 	function handleRetry() {
@@ -445,7 +444,7 @@
 	.loading-screen {
 		position: fixed;
 		inset: 0;
-		z-index: 100;
+		z-index: 9999;
 		background: #fff;
 		display: grid;
 		place-items: center;
